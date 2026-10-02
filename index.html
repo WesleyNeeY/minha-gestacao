@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#c86b8e">
+<title>Minha Gestação</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f8f3f5;color:#382d32;font-family:Arial,sans-serif}
+#app{max-width:450px;min-height:100vh;margin:auto;background:#fff}
+.screen{display:none;padding:20px 18px 100px;min-height:100vh}
+.screen.active{display:block}
+h1{font-size:25px;margin:5px 0}
+h2{font-size:20px}
+.sub,.small{color:#82757a;font-size:13px;line-height:1.5}
+.card{background:#fff;border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 3px 18px #0000000d}
+.hero{background:linear-gradient(135deg,#c86b8e,#df94ad);color:#fff}
+.hero .small{color:#fff}
+.week{font-size:32px;font-weight:bold;margin:8px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.action{text-align:center;cursor:pointer}
+.icon{font-size:27px;margin-bottom:7px}
+.btn{width:100%;border:0;border-radius:13px;padding:14px;background:#c86b8e;color:#fff;font-size:15px;font-weight:bold;cursor:pointer}
+.btn.light{background:#fae8ef;color:#a84f72}
+.input,select,textarea{width:100%;padding:13px;border:1px solid #eadde2;border-radius:11px;margin:6px 0 12px;font-size:15px;background:#fff}
+textarea{min-height:90px}
+.item{padding:12px 0;border-bottom:1px solid #f1e7eb}
+.item:last-child{border:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.badge{display:inline-block;background:#fae8ef;color:#a84f72;padding:6px 10px;border-radius:20px;font-size:12px}
+.warning{background:#fff3e7;border-left:5px solid #ef9b45}
+.emergency{background:#fff0f0;border-left:5px solid #d84a4a}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(450px,100vw);height:72px;background:#fff;border-top:1px solid #eee;display:flex;z-index:10}
+.nav button{flex:1;border:0;background:#fff;color:#81747a;font-size:10px}
+.nav button b{display:block;font-size:21px}
+.nav button.on{color:#c86b8e}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:20}
+.modal.open{display:flex}
+.sheet{background:#fff;width:min(450px,100vw);margin:auto 0 0;padding:20px;border-radius:24px 24px 0 0;max-height:90vh;overflow:auto}
+.toast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%);background:#382d32;color:#fff;padding:11px 16px;border-radius:20px;display:none;z-index:30;font-size:13px}
+.check{display:flex;gap:10px;align-items:flex-start;margin:11px 0}
+.check input{margin-top:3px}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+<section id="home" class="screen active">
+<div class="row">
+<div>
+<h1>Minha Gestação 🤰</h1>
+<div class="sub">Acompanhe esse momento especial.</div>
+</div>
+<button onclick="show('profile')" style="border:0;background:none;font-size:24px">⚙️</button>
+</div>
+
+<div class="card hero">
+<div id="babyGreeting">Sua gestação</div>
+<div class="week" id="weekText">Configure sua gestação</div>
+<div id="trimesterText">Informe a data provável do parto</div>
+<br>
+<div class="small" id="daysText"></div>
+</div>
+
+<div class="card">
+<div class="row"><b>👶 Seu bebê esta semana</b><span class="badge" id="weekBadge">--</span></div>
+<h2 id="babySize">Vamos começar?</h2>
+<p class="small" id="babyDevelopment">Cadastre a data provável do parto para acompanhar sua gestação semana a semana.</p>
+</div>
+
+<h2>Acesso rápido</h2>
+
+<div class="grid">
+<div class="card action" onclick="show('care')"><div class="icon">❤️</div><b>Cuidados</b><div class="small">Saúde e bem-estar</div></div>
+<div class="card action" onclick="show('agenda')"><div class="icon">📅</div><b>Consultas</b><div class="small">Pré-natal e exames</div></div>
+<div class="card action" onclick="show('diary')"><div class="icon">📔</div><b>Diário</b><div class="small">Registre seu dia</div></div>
+<div class="card action" onclick="show('tools')"><div class="icon">💗</div><b>Ferramentas</b><div class="small">Movimentos e contrações</div></div>
+</div>
+
+<div class="card warning">
+<b>💡 Cuidados desta semana</b>
+<p class="small" id="weeklyCare">Configure sua gestação para receber informações de acordo com a semana.</p>
+</div>
+</section>
+
+<section id="care" class="screen">
+<h1>❤️ Cuidados</h1>
+<div class="sub">Informações gerais para ajudar na organização da gestação.</div>
+
+<div class="card"><b>🥗 Alimentação</b><p class="small">Mantenha alimentação variada e hidratação adequada. Cuidados específicos e restrições devem ser discutidos durante o pré-natal.</p></div>
+
+<div class="card"><b>💊 Medicamentos</b><p class="small">Não inicie, interrompa ou altere medicamentos e suplementos sem orientação de um profissional de saúde que conheça sua gestação.</p></div>
+
+<div class="card"><b>🏃 Atividade física</b><p class="small">A possibilidade e o tipo de exercício dependem da situação de cada gestação. Converse com o profissional responsável pelo pré-natal.</p></div>
+
+<div class="card"><b>😴 Sono e descanso</b><p class="small">Observe sua necessidade de descanso e converse com o pré-natal se houver dificuldade importante para dormir ou outros sintomas.</p></div>
+
+<div class="card"><b>🦷 Saúde bucal</b><p class="small">A saúde bucal também faz parte do acompanhamento durante a gestação. Informe ao dentista que está grávida.</p></div>
+
+<div class="card"><b>💉 Vacinação</b><p class="small">Mantenha sua situação vacinal acompanhada pela equipe de saúde. As recomendações podem variar conforme histórico e período gestacional.</p></div>
+
+<div class="card"><b>🩺 Pré-natal</b><p class="small">Mantenha as consultas e leve dúvidas, resultados de exames, medicamentos em uso e informações sobre sintomas para avaliação profissional.</p></div>
+
+<div class="card emergency">
+<b>⚠️ Atenção aos sinais de alerta</b>
+<p class="small">Alguns sintomas durante a gravidez precisam de avaliação profissional, especialmente quando intensos, novos ou preocupantes. Sangramento, perda de líquido, dor intensa, falta de ar importante, convulsão/desmaio ou alteração percebida nos movimentos do bebê são exemplos de situações que não devem ser avaliadas apenas pelo aplicativo.</p>
+<button class="btn" onclick="alert('Em uma emergência, procure imediatamente um serviço de saúde. Este aplicativo não realiza diagnóstico.')">Entendi</button>
+</div>
+
+<div class="card">
+<b>📌 Importante</b>
+<p class="small">Este aplicativo serve para organização e educação. Ele não diagnostica doenças e não substitui consultas, exames ou orientação da equipe de saúde.</p>
+</div>
+</section>
+
+<section id="agenda" class="screen">
+<h1>📅 Minha agenda</h1>
+<div class="sub">Consultas, ultrassons e exames.</div>
+<button class="btn" onclick="openAppointment()">+ Adicionar compromisso</button>
+<div id="appointmentList"></div>
+</section>
+
+<section id="diary" class="screen">
+<h1>📔 Meu diário</h1>
+<div class="sub">Guarde lembranças e informações para conversar no pré-natal.</div>
+<button class="btn" onclick="openDiary()">+ Novo registro</button>
+<div id="diaryList"></div>
+</section>
+
+<section id="tools" class="screen">
+<h1>💗 Ferramentas</h1>
+
+<div class="card">
+<b>👣 Registro de movimentos</b>
+<p class="small">Use esta ferramenta somente como registro pessoal. Ela não determina se os movimentos estão normais.</p>
+<div class="row">
+<span>Registros desta sessão</span>
+<b id="kickCount">0</b>
+</div><br>
+<button class="btn" onclick="addKick()">Registrar movimento</button>
+<br><br>
+<button class="btn light" onclick="resetKicks()">Zerar sessão</button>
+</div>
+
+<div class="card">
+<b>⏱️ Contrações</b>
+<p class="small">Cronometre para ter informações que possam ser relatadas à equipe de saúde. O aplicativo não determina quando o trabalho de parto começou.</p>
+<div id="contractionStatus" style="font-size:22px;font-weight:bold;margin:15px 0">00:00</div>
+<button class="btn" id="contractionBtn" onclick="toggleContraction()">Iniciar contração</button>
+<div id="contractionList"></div>
+</div>
+
+<div class="card">
+<b>🧳 Mala da maternidade</b>
+<div id="bagList"></div>
+</div>
+</section>
+
+<section id="profile" class="screen">
+<h1>⚙️ Minha gestação</h1>
+
+<div class="card">
+<label>Nome da gestante</label>
+<input class="input" id="motherName" placeholder="Seu nome">
+
+<label>Nome ou apelido do bebê</label>
+<input class="input" id="babyName" placeholder="Ex.: Sofia">
+
+<label>Data provável do parto</label>
+<input class="input" id="dueDate" type="date">
+
+<button class="btn" onclick="saveProfile()">Salvar informações</button>
+</div>
+
+<div class="card">
+<b>🔒 Privacidade</b>
+<p class="small">Nesta versão, as informações são armazenadas localmente neste navegador/aparelho. Limpar os dados do navegador pode apagar os registros.</p>
+</div>
+
+<button class="btn light" onclick="resetAll()">Apagar dados do aplicativo</button>
+</section>
+
+<nav class="nav">
+<button data-s="home" onclick="show('home')"><b>⌂</b>Início</button>
+<button data-s="care" onclick="show('care')"><b>♥</b>Cuidados</button>
+<button data-s="agenda" onclick="show('agenda')"><b>▣</b>Agenda</button>
+<button data-s="diary" onclick="show('diary')"><b>✎</b>Diário</button>
+<button data-s="tools" onclick="show('tools')"><b>♡</b>Ferramentas</button>
+</nav>
+
+</div>
+
+<div id="modal" class="modal"><div class="sheet" id="sheet"></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const KEY='minhaGestacaoV1';
+
+let db=JSON.parse(localStorage.getItem(KEY)||'{"profile":{},"appointments":[],"diary":[],"kicks":0}');
+
+const bagItems=[
+'Documentos pessoais',
+'Cartão/caderneta da gestante',
+'Documentos e exames solicitados pela maternidade',
+'Roupas confortáveis para a mãe',
+'Itens de higiene pessoal',
+'Roupas do bebê',
+'Fraldas',
+'Manta para o bebê'
+];
+
+function save(){
+localStorage.setItem(KEY,JSON.stringify(db));
+renderAll();
+}
+
+function show(id){
+document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.s===id));
+if(id==='profile')loadProfile();
+renderAll();
+scrollTo(0,0);
+}
+
+function toast(t){
+let e=document.getElementById('toast');
+e.textContent=t;
+e.style.display='block';
+setTimeout(()=>e.style.display='none',2200);
+}
+
+function openModal(html){
+sheet.innerHTML=html;
+modal.classList.add('open');
+}
+
+function closeModal(){
+modal.classList.remove('open');
+}
+
+function esc(s){
+return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+
+function pregnancyInfo(){
+if(!db.profile.dueDate)return null;
+
+let due=new Date(db.profile.dueDate+'T12:00:00');
+let today=new Date();
+today.setHours(12,0,0,0);
+
+let conceptionStart=new Date(due);
+conceptionStart.setDate(conceptionStart.getDate()-280);
+
+let days=Math.floor((today-conceptionStart)/86400000);
+let week=Math.floor(days/7);
+let day=days%7;
+
+week=Math.max(0,Math.min(42,week));
+
+let remaining=Math.ceil((due-today)/86400000);
+
+return {week,day,remaining,due};
+}
+
+function getDevelopment(w){
+if(w<5)return ['Início da gestação','O organismo está passando pelas primeiras mudanças da gravidez.'];
+if(w<9)return ['Primeiras semanas','Estruturas importantes estão em desenvolvimento.'];
+if(w<14)return ['Fim do primeiro trimestre','O desenvolvimento do bebê avança rapidamente durante esta fase.'];
+if(w<18)return ['Segundo trimestre','O bebê continua crescendo e desenvolvendo seus movimentos.'];
+if(w<23)return ['Crescendo bastante','Nesta fase, muitas gestantes começam a perceber mudanças mais evidentes no corpo.'];
+if(w<28)return ['Desenvolvimento contínuo','O bebê continua ganhando tamanho e amadurecendo seus sistemas.'];
+if(w<32)return ['Terceiro trimestre se aproxima','O crescimento e o amadurecimento continuam.'];
+if(w<36)return ['Reta final','O bebê segue ganhando peso e se preparando para o nascimento.'];
+if(w<40)return ['Está chegando!','A gestação está em sua fase final. Mantenha o acompanhamento do pré-natal.'];
+return ['Final da gestação','Mantenha contato com a equipe responsável pelo seu pré-natal.'];
+}
+
+function getWeeklyCare(w){
+if(w<13)return 'Priorize o acompanhamento pré-natal e leve suas dúvidas sobre alimentação, medicamentos, suplementos e sintomas.';
+if(w<28)return 'Continue acompanhando consultas e exames indicados e converse com sua equipe sobre atividade física, alimentação e mudanças no corpo.';
+if(w<37)return 'Além do pré-natal, comece a revisar a organização para maternidade, documentos e orientações recebidas sobre o parto.';
+return 'Mantenha as orientações da sua equipe de pré-natal e deixe documentos, contatos e itens para a maternidade organizados.';
+}
+
+function renderPregnancy(){
+let p=pregnancyInfo();
+
+if(!p){
+weekText.textContent='Configure sua gestação';
+trimesterText.textContent='Informe a data provável do parto';
+daysText.textContent='';
+weekBadge.textContent='--';
+return;
+}
+
+weekText.textContent=`${p.week} semanas + ${p.day} dias`;
+
+let trimester=p.week<14?'1º trimestre':p.week<28?'2º trimestre':'3º trimestre';
+trimesterText.textContent=trimester;
+
+daysText.textContent=p.remaining>=0
+?`Aproximadamente ${p.remaining} dias para a data provável do parto`
+:'A data provável do parto já passou. Converse com sua equipe de saúde.';
+
+weekBadge.textContent=`${p.week}ª semana`;
+
+let dev=getDevelopment(p.week);
+babySize.textContent=dev[0];
+babyDevelopment.textContent=dev[1];
+weeklyCare.textContent=getWeeklyCare(p.week);
+
+babyGreeting.textContent=db.profile.babyName
+?`${db.profile.babyName} 💕`
+:'Sua gestação';
+}
+
+function loadProfile(){
+motherName.value=db.profile.motherName||'';
+babyName.value=db.profile.babyName||'';
+dueDate.value=db.profile.dueDate||'';
+}
+
+function saveProfile(){
+db.profile={
+motherName:motherName.value.trim(),
+babyName:babyName.value.trim(),
+dueDate:dueDate.value
+};
+save();
+show('home');
+toast('Informações salvas');
+}
+
+function openAppointment(){
+openModal(`
+<h2>Novo compromisso</h2>
+<label>Tipo</label>
+<select id="aType">
+<option>Consulta pré-natal</option>
+<option>Ultrassom</option>
+<option>Exame</option>
+<option>Vacina</option>
+<option>Dentista</option>
+<option>Outro</option>
+</select>
+<label>Data</label>
+<input class="input" id="aDate" type="date">
+<label>Horário</label>
+<input class="input" id="aTime" type="time">
+<label>Local / observação</label>
+<input class="input" id="aNote">
+<button class="btn" onclick="addAppointment()">Salvar</button>
+<br><br>
+<button class="btn light" onclick="closeModal()">Cancelar</button>
+`);
+}
+
+function addAppointment(){
+let type=aType.value,date=aDate.value,time=aTime.value,note=aNote.value.trim();
+if(!date)return toast('Informe a data');
+db.appointments.push({id:Date.now(),type,date,time,note});
+db.appointments.sort((a,b)=>a.date.localeCompare(b.date));
+save();
+closeModal();
+toast('Compromisso salvo');
+}
+
+function deleteAppointment(id){
+db.appointments=db.appointments.filter(x=>x.id!==id);
+save();
+}
+
+function renderAppointments(){
+appointmentList.innerHTML=db.appointments.map(a=>`
+<div class="card">
+<div class="row"><b>${esc(a.type)}</b><button onclick="deleteAppointment(${a.id})" style="border:0;background:none">🗑️</button></div>
+<p>${new Date(a.date+'T12:00:00').toLocaleDateString('pt-BR')} ${esc(a.time)}</p>
+<div class="small">${esc(a.note)}</div>
+</div>
+`).join('')||'<div class="card small">Nenhum compromisso cadastrado.</div>';
+}
+
+function openDiary(){
+openModal(`
+<h2>Novo registro</h2>
+<label>Como você está se sentindo?</label>
+<select id="dMood">
+<option>😊 Bem</option>
+<option>🥰 Feliz</option>
+<option>😴 Cansada</option>
+<option>🤢 Enjoada</option>
+<option>😟 Preocupada</option>
+<option>😢 Triste</option>
+<option>Outro</option>
+</select>
+<label>Anotações</label>
+<textarea id="dText" placeholder="Conte como foi seu dia, dúvidas para o pré-natal, sintomas que deseja lembrar..."></textarea>
+<button class="btn" onclick="addDiary()">Salvar</button>
+<br><br>
+<button class="btn light" onclick="closeModal()">Cancelar</button>
+`);
+}
+
+function addDiary(){
+let text=dText.value.trim();
+if(!text)return toast('Escreva uma anotação');
+db.diary.unshift({
+id:Date.now(),
+mood:dMood.value,
+text,
+date:new Date().toLocaleDateString('pt-BR')
+});
+save();
+closeModal();
+toast('Registro salvo');
+}
+
+function deleteDiary(id){
+db.diary=db.diary.filter(x=>x.id!==id);
+save();
+}
+
+function renderDiary(){
+diaryList.innerHTML=db.diary.map(d=>`
+<div class="card">
+<div class="row"><b>${esc(d.mood)}</b><span class="small">${d.date}</span></div>
+<p>${esc(d.text)}</p>
+<button onclick="deleteDiary(${d.id})" style="border:0;background:none;color:#a84f72">Excluir</button>
+</div>
+`).join('')||'<div class="card small">Seu diário ainda está vazio.</div>';
+}
+
+function addKick(){
+db.kicks=(db.kicks||0)+1;
+save();
+}
+
+function resetKicks(){
+db.kicks=0;
+save();
+}
+
+let contractionStart=null;
+let timer=null;
+
+function toggleContraction(){
+if(!contractionStart){
+contractionStart=Date.now();
+contractionBtn.textContent='Finalizar contração';
+
+timer=setInterval(()=>{
+let sec=Math.floor((Date.now()-contractionStart)/1000);
+contractionStatus.textContent=
+String(Math.floor(sec/60)).padStart(2,'0')+':'+
+String(sec%60).padStart(2,'0');
+},1000);
+
+}else{
+let duration=Math.floor((Date.now()-contractionStart)/1000);
+clearInterval(timer);
+
+db.contractions=db.contractions||[];
+db.contractions.unshift({
+time:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+duration
+});
+
+contractionStart=null;
+contractionBtn.textContent='Iniciar contração';
+contractionStatus.textContent='00:00';
+save();
+}
+}
+
+function renderContractions(){
+let arr=db.contractions||[];
+contractionList.innerHTML=arr.slice(0,10).map(c=>`
+<div class="item">
+<b>${c.time}</b>
+<span style="float:right">${c.duration}s</span>
+</div>
+`).join('');
+}
+
+function toggleBag(i){
+db.bag=db.bag||{};
+db.bag[i]=!db.bag[i];
+save();
+}
+
+function renderBag(){
+db.bag=db.bag||{};
+bagList.innerHTML=bagItems.map((x,i)=>`
+<label class="check">
+<input type="checkbox" ${db.bag[i]?'checked':''} onchange="toggleBag(${i})">
+<span>${x}</span>
+</label>
+`).join('');
+}
+
+function resetAll(){
+if(confirm('Deseja apagar todos os dados salvos neste aparelho?')){
+localStorage.removeItem(KEY);
+db={profile:{},appointments:[],diary:[],kicks:0};
+renderAll();
+show('home');
+toast('Dados apagados');
+}
+}
+
+function renderAll(){
+renderPregnancy();
+renderAppointments();
+renderDiary();
+kickCount.textContent=db.kicks||0;
+renderContractions();
+renderBag();
+}
+
+renderAll();
+</script>
+</body>
+</html>
