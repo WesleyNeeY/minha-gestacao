@@ -1,0 +1,12 @@
+{
+  "name": "Minha Gestação",
+  "short_name": "Gestação",
+  "description": "Acompanhe sua gestação, consultas, cuidados e momentos especiais.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f3f5",
+  "theme_color": "#c86b8e",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR"
+}
